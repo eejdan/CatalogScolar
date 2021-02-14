@@ -1,0 +1,13 @@
+* {
+    box-sizing: border-box;
+}
+:root {
+    background: #ffff9f;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 62.5%;
+}
+header { 
+    padding: 0;
+    width: 100%;
+    position: sticky;
+}
