@@ -1,6 +1,8 @@
 <%- include('enclosure/top') %>
 
-
+<%  parts.forEach((part) => { %>
+    <%- include(part.dir) %>
+<% }) %>
 
 
 
