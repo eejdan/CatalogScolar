@@ -1,0 +1,31 @@
+logbox {
+    box-shadow: -5px 6px 4px rgba(0,0,0,0.5);
+    display: block;
+    font-size: 2.3em;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 5px solid #d72323;
+    padding: 2em;
+    border-radius: 2em;
+    overflow: auto;
+}
+logbox input {
+    margin: 2px 0 2px 0;
+    border: none;
+    padding: 2px;
+    border-radius: 5px;
+    background: lightgray;
+}
+logbox > ltitle{ 
+    font-family: 'Exo', sans-serif;
+    padding: 1px;
+    margin-bottom: 4px;
+    text-align: center;
+}
+logbox input[type=submit] {
+    color: white;
+    background-color: #66BFFF;
+    padding: 5px;
+}

@@ -1,6 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,400;0,500;1,600;1,800&display=swap');
 header { 
-    padding: 0.2fr;
+    margin: 0;
     width: 100%;
-    position: sticky;
+    text-align: center;
+    color: white;
+    background: #3e3636;
+    padding: 3px;
     font-family: 'Exo', sans-serif;
 }

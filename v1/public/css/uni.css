@@ -1,13 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,400;0,500;1,600;1,800&display=swap');
+
 * {
     box-sizing: border-box;
+    -moz-box-sizing: border-box; 
+    -ms-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -khtml-box-sizing: border-box
+}
+body {
+    margin: 0;
 }
 :root {
-    background: #ffff9f;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    background: white;
     font-size: 62.5%;
 }
-header { 
-    padding: 0;
-    width: 100%;
-    position: sticky;
-}
+

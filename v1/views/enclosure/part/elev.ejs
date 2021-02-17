@@ -1,11 +1,17 @@
 <elev>
     <noscript>Enable Javascript</noscript>
     <script>
-        let url = "./elev"
-        fetch(url, {
-            credentials: "same-origin"
-        }).then((res) => {
-            
-        }).catch();
+        function logoff() {
+            let url = "./logout"
+            fetch(url, {
+                method: 'POST',
+                credentials: 'include' 
+            }).then((res) => {
+                console.log(res);
+                window.location.replace('./')
+            }).catch();
+        }
     </script>
+    ELEV
+    <button onclick="logoff()">Logout</button>
 </elev>
