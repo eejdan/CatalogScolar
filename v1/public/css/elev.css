@@ -1,0 +1,111 @@
+elev { 
+    font-size: 132% !important;
+    font-family: 'Open Sans', sans-serif;
+    margin: auto;
+    width: 600px;
+}
+elev button {
+    color: white;
+    background-color: #66BFFF;
+    padding: 5px;
+    border: none;
+}
+#abar {
+  display: flex;
+  justify-content: space-around;
+	padding: 10px;
+	margin-top:20px;
+	font-size: 20px;
+	color:#484848;
+}
+table{
+	border-radius: 6px 6px 6px 6px !important;
+	border-collapse: collapse;
+	background: #fff;
+    border: 1px #484848;
+	max-width: 95%;
+	margin:auto;
+}
+.sumar
+{
+	border: 2px solid #1F7A8C;
+	padding: 20px;
+}
+.title
+{
+	text-align: center;
+	font-size: 2em;
+	font-family:'Merriweather', serif;
+}
+thead {
+	background-color: #247BA0;
+	color:whitesmoke;
+}
+thead tr {
+	border-top-left-radius: 6px; border-top-right-radius: 6px;
+}
+thead td {
+	background: transparent !important;
+}
+th,td {
+ 	padding: 10px;
+	text-align: center;
+}
+tbody tr:nth-child(even) {
+  background: #eee;
+}
+.materii
+{
+	max-width: 2em;
+}
+.buton{
+border-radius: 8px;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 18px;
+	font-family: 'PT Sans', sans-serif;
+    margin: 0 15px 20px 25px;
+}
+.logout
+{
+	font-size: 15px;
+	cursor: pointer;
+	color: white;
+    background-color: #66BFFF;
+    padding: 5px;
+    border-radius: 5px;
+}
+.card {
+  border-radius: 20px;
+  background-color: white;
+  padding: 40px 40px 45px 40px;
+  margin: 20px 15px 15px 15px; 
+  box-shadow: -10px 10px 5px rgba(0,0,0,0.5);
+}
+.left
+{
+	float: left;
+
+}
+.right
+{
+	float: right;
+	font-size: 20px;
+	color:#484848;
+}
+@media only screen and (min-width: 300px) {
+	/* for mobiles */
+}
+@media only screen and (min-width: 600px) {
+  /* For tablets: */
+	table {
+		width: 95%;
+	}
+}
+@media only screen and (min-width: 768px) {
+  /* For desktop: */
+	
+
+}

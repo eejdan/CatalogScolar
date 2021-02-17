@@ -7,11 +7,124 @@
                 method: 'POST',
                 credentials: 'include' 
             }).then((res) => {
+                window.location.replace('./')
+            }).catch();
+        }
+        function updateData() {
+
+        }
+    </script>
+    <div class="card">
+        <div class="title">Spatiu virtual pentru X</div>
+         <div id="abar">
+           <div id="datetime"></div>
+           <div> semstru aici</div>
+          <div><button onclick="logoff()">Logout</button></div>
+          </div>
+        </div>
+          
+            <div class="card">
+             <h2 style="float:left">Sumar situatie scolara </h2>
+             <table class="sumar">
+                 <tr>
+                       <td>    </td>
+                       <td>Semestrul I</td>
+                         <td>Semestrul II</td>
+                         <td>Total</td>
+               </tr>
+                     <tr>
+                        <td>Medie</td>
+                            <td>8.13</td>
+                            <td>8.13</td>
+                            <td>8.13</td>
+                     </tr>
+                     <tr>
+                         <td>Absente</td>
+                             <td>3</td>
+                             <td>2</td>
+                             <td>5</td>
+             </table>
+             <div></div>
+                <button class="buton" onClick="show(1)">Note</button>
+                <button class="buton" onClick="show(0)">Absente</button>
+                <button class="buton" onClick="show()"></button>
+                <table>
+                <thead>
+                    <tr>
+                        <th style="border-top-left-radius: 6px">Materia</th>
+                        <th>Semestrul I</th>
+                        <th style="border-top-right-radius: 6px">Semestrul II</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                            <td class="materii">Matematica</td>
+                            <td><div style="display:none" class="absenta">abs</div>
+                            <div class="nota">nota</div></</td>
+                            <td><div style="display:none" class="absenta">abs</div>
+                            <div class="nota">nota</div></</td>
+                            
+                    </tr>
+                    <tr>
+                            <td class="materii">Romana</td>
+                            <td><div style="display:none" class="absenta">abs</div>
+                            <div class="nota">nota</div></td>
+                            <td><div style="display:none" class="absenta">abs</div>
+                            <div class="nota">nota</div></td>
+                        
+                    </tr>
+                    <tr>
+                            <td class="materii">Engleza</td>
+                            <td>
+                                <div style="display:none" class="absenta">abs</div>
+                                <div class="nota">nota</div></td>
+                            <td>
+                                <div style="display:none" class="absenta">abs</div>
+                                <div class="nota">nota</div>
+                            </td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+        <div class="card">
+         <p>Orar</p>
+        </div>
+        </body>
+        <script>
+        
+        function show(tip) {
+            if(tip==1) {
+                var x = document.getElementsByClassName('absenta');
+                for(var i=0;i<x.length;i++) {
+                    x[i].style.display="none";
+                }
+                var y = document.getElementsByClassName('nota');
+                for(var i=0;i<y.length;i++) {
+                    y[i].style.display="block";
+                }
+            } else {
+                var x = document.getElementsByClassName('nota');
+                for(var i=0;i<x.length;i++) {
+                    x[i].style.display="none";
+                }
+                var y = document.getElementsByClassName('absenta');
+                for(var i=0;i<y.length;i++) {
+                    y[i].style.display="block";
+                }
+            }
+        }
+        var dt = new Date();
+        document.getElementById("datetime").innerHTML = (("0"+dt.getDate()).slice(-2)) +"."+ (("0"+(dt.getMonth()+1)).slice(-2)) +"."+ (dt.getFullYear()) +" "+ (("0"+dt.getHours()).slice(-2)) +":"+ (("0"+dt.getMinutes()).slice(-2));
+        function updateTable() {
+            let url = "./elev"
+            fetch(url, {
+                method: 'POST',
+                credentials: 'include' 
+            }).then((res) => {
                 console.log(res);
                 window.location.replace('./')
             }).catch();
         }
-    </script>
-    ELEV
-    <button onclick="logoff()">Logout</button>
+        </script>
+    
 </elev>
