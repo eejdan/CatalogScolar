@@ -63,7 +63,7 @@ app.get('/', async (req,res) => {
         if(returned) { return; }
     })
 })
-//req.body.password //req.body.matricol
+//login almost done
 app.post('/login', (req,res) => {
     console.log(req.body.password);
     var returned = false;
@@ -98,12 +98,13 @@ app.post('/login', (req,res) => {
                 }
                 cookie = shaenc(cookie);
             }
-            let makeSessionSql = `INSERT INTO \`session\` (\`numar_matricol\`, \`sid\`) VALUES ('${req.body.matricol}', '${cookie}')`;
+            let makeSessionSql = `INSERT INTO \`session\` (\`numar_matricol\`, \`sid\`,\`clasa\`) VALUES ('${req.body.matricol}', '${cookie}', '${result[0].clasa}')`;
             con.query(makeSessionSql, async (err, result, fields) => {
                 if(err) throw err;    
                 await res.cookie('sid', cookie, { signed: true });
                 return res.redirect('/');
             })
+            let makeSession
         })
         if(returned) {return;}
     })
@@ -121,8 +122,7 @@ app.post('/logout', (req,res) => {
     })
 })
 //FIX THIS
-app.post('/elev/', (req,res) => {
-    //validate cookie
+app.post('/elev/', (req,res) => { //neterminat //de aici se preiau in forma JSON informatiile despre elev, note, absente
     if(!req.signedCookies.sid) {
         return res.send(401);
     }
@@ -138,37 +138,51 @@ app.post('/elev/', (req,res) => {
             }
             refreshSid(req.signedCookies.sid);
             let build = {
-                "nota": [],
-                "abs": []
+                "materii": []
             }
-            let getElevClasaSql = `SELECT * FROM \`clasa\` WHERE `
-            
-            con.query()
-                let getElevNotaSql = `SELECT * FROM \`nota\` WHERE numar_matricol=${result[0].numar_matricol}`;
-                con.query(getElevNotaSql, (err, result, field) => {
+            let matricol = result[0].numar_matricol;
+            let getElevInfoSql = `SELECT nume,prenume,clasa FROM \`elev\` WHERE numar_matricol='${matricol}'`;
+            con.query(getElevInfoSql, (err, result, fields) => {
+                if(err) { console.log(err); res.send(500); }
+                let getElevClasaSql = `SELECT * FROM \`clasa\` WHERE clasa='${result[0].clasa}'`;
+                con.query(getElevClasaSql, (err, result, fields) => {
                     if(err) { console.log(err); res.send(500); }
-                    result.forEach((sres)=> {
-                    build.nota[build.nota.length] = {"materie":sres.disciplina,"nota":sres.nota,"data":sres.data} 
-                    });
-                    let getAbsentaSql = `SELECT * FROM \`absenta\` WHERE numar_matricol=${result[0].numar_matricol}`
-                    con.query(getAbsentaSql, (err, result, field) => {
-                        if(err) { console.log(err); res.send(500) }
-                        if(!result.length) {
-                            return res.send(build);
-                        }
-                        result.forEach((sres) => {
-                            build.abs[build.abs.length] = {}
+                    if(!result.length) { res.send(400); return;}
+                    result.forEach((sres) => {
+                        build.materii[sres.materie]={"nume": sres.materie, "profesor": sres.profesor, "note": [], "abs": []}
+                    })
+                    let getElevNotaSql = `SELECT * FROM \`nota\` WHERE numar_matricol=${matricol}`;
+                    con.query(getElevNotaSql, (err, result, field) => {
+                        if(err) { console.log(err); res.send(500); }
+                        result.forEach((sres)=> {
+                            build.materii[sres.disciplina].note[build.materii[sres.disciplina].note.length]={"nota": sres.nota, "data": sres.data};
+                        });
+                        let getAbsentaSql = `SELECT * FROM \`absenta\` WHERE numar_matricol=${matricol}`
+                        con.query(getAbsentaSql, (err, result, field) => {
+                            if(err) { console.log(err); res.send(500) }
+                            if(!result.length) {
+                                return res.send(build);
+                            }
+                            result.forEach((sres) => {
+                                build.materii[sres.disciplina].abs[build.materii[sres.disciplina].abs.length]={"data": sres.data};
+                            })
+                            res.send(build);
                         })
                     })
-                });
+                })
+            })
         })
     })
 }) 
 
+// De facut: Interfata profesor si administrator sistem
+
+
+
 app.listen(3030);
 
 async function init() {
-    cleanSids()
+    setTimeout(cleanSids, 50000)
 }
 logErrVault = [];
 function logFailsafe(type) {
@@ -187,16 +201,17 @@ async function refreshSid(lsid) {
         con.query(updateSidSql, (err, result, fields) => { 
             if(err) return console.log(err);
         })
-    })
+    })  
 }
 async function cleanSids() {
     sqlPool.getConnection((err, con) => {
         if(err) return console.log(err);
-        let updateSidSql = `DELETE FROM \`session\` WHERE data < ${buildDbDate}`;
+        let updateSidSql = `DELETE FROM \`session\` WHERE last < ${buildDbDate()}`;
         con.query(updateSidSql, (err, result, fields) => { 
             if(err) return console.log(err);
         })
     })
+    console.log("Sids cleaned")
     setTimeout(cleanSids, 43200000)
 }
 
@@ -215,8 +230,8 @@ function buildDbDate(a) {
 
 /* Notes:
 Dates are managed by the web server.
-
-
+Database dates are: YYYY-MM-DD
+Absente si note : MM-DD
 
 
 */
