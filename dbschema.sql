@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gazdă: 127.0.0.1
--- Timp de generare: feb. 17, 2021 la 02:42 PM
+-- Timp de generare: feb. 18, 2021 la 01:42 PM
 -- Versiune server: 10.4.17-MariaDB
 -- Versiune PHP: 8.0.0
 
@@ -29,8 +29,20 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `absenta` (
   `numar_matricol` int(11) NOT NULL,
-  `ora` tinytext NOT NULL,
-  `data` date NOT NULL DEFAULT current_timestamp()
+  `disciplina` tinytext NOT NULL,
+  `data` tinytext NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Structură tabel pentru tabel `clasa`
+--
+
+CREATE TABLE `clasa` (
+  `clasa` tinytext NOT NULL,
+  `materie` tinytext NOT NULL,
+  `profesor` tinytext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -79,6 +91,7 @@ CREATE TABLE `nota` (
 CREATE TABLE `session` (
   `numar_matricol` int(11) NOT NULL,
   `sid` tinytext NOT NULL,
+  `clasa` tinytext NOT NULL,
   `last` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -102,6 +115,7 @@ CREATE TABLE `status` (
 
 CREATE TABLE `user` (
   `numar_matricol` int(11) NOT NULL,
+  `clasa` tinytext NOT NULL,
   `password` tinytext NOT NULL,
   `p1_password` tinytext NOT NULL,
   `p2_password` tinytext NOT NULL
