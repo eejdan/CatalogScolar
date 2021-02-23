@@ -5,7 +5,7 @@ require('dotenv').config();
 init();
 
 const express = require("express");
-const hash = require('hash.js')
+const hash = require('hash.js');
 const cookieParser = require("cookie-parser");
 const bodyParser = require('body-parser');
 const { render } = require("ejs");
@@ -153,20 +153,23 @@ app.post('/elev/', (req,res) => { //neterminat //de aici se preiau in forma JSON
                     })
                     let getElevNotaSql = `SELECT * FROM \`nota\` WHERE numar_matricol=${matricol}`;
                     con.query(getElevNotaSql, (err, result, field) => {
-                        if(err) { console.log(err); res.send(500); }
+                        if(err) { console.log(err); return res.send(500); }
+                        if(!result.length) {
+                            return res.send(build)
+                        }
                         result.forEach((sres)=> {
-                            build.materii[sres.disciplina].note[build.materii[sres.disciplina].note.length]={"nota": sres.nota, "data": sres.data};
-                        });
-                        let getAbsentaSql = `SELECT * FROM \`absenta\` WHERE numar_matricol=${matricol}`
-                        con.query(getAbsentaSql, (err, result, field) => {
-                            if(err) { console.log(err); res.send(500) }
+                            build.materii[sres.disciplina].note[build.materii[sres.disciplina].note.length]={"nota": sres.nota, "data": sres.data }
+                        })
+                        let getElevAbsentaSql = `SELECT * FROM \`absenta\` WHERE numar_matricol=${matricol}`;
+                        con.query(getElevAbsentaSql, (err, result, fields) => {
+                            if(err) { console.log(err); return res.send(500); }
                             if(!result.length) {
-                                return res.send(build);
+                                return res.send(build)
                             }
                             result.forEach((sres) => {
-                                build.materii[sres.disciplina].abs[build.materii[sres.disciplina].abs.length]={"data": sres.data};
+                                build.materii[sres.disciplina].abs[build.materii[sres.disciplina].abs.length] = {"materie": sres.disciplina, "data": sres.data};
                             })
-                            res.send(build);
+                            return res.send(build);
                         })
                     })
                 })

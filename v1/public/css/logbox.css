@@ -6,10 +6,13 @@ logbox {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border: 5px solid #d72323;
+    border: 5px solid #3E3636;
     padding: 2em;
     border-radius: 2em;
-    overflow: auto;
+    background-color: white;
+}
+:root {
+    background-color: teal !important;
 }
 logbox input {
     margin: 2px 0 2px 0;
