@@ -175,42 +175,12 @@ app.post('/elev/', (req,res) => { //neterminat //de aici se preiau in forma JSON
 
 // De facut: Interfata profesor si administrator sistem
 
+app.listen(process.env.WEBPORT, () => { console.log("Web server pornit.")});
 
+function init() {}
 
-app.listen(3030);
-
-async function init() {
-    setTimeout(cleanSids, 50000)
-}
-logErrVault = [];
-function logFailsafe(type) {
-    logErrVault[logErrVault.length] = { 
-        "type": type,
-        "context": context
-    };
-}
 function shaenc(str) {
     return hash.sha256().update(str).digest('hex');
-}
-async function refreshSid(lsid) {
-    sqlPool.getConnection((err, con) => {
-        if(err) return console.log(err);
-        let updateSidSql = `UPDATE \`session\` SET data='${buildDbDate()}' WHERE sid='${lsid}'`;
-        con.query(updateSidSql, (err, result, fields) => { 
-            if(err) return console.log(err);
-        })
-    })  
-}
-async function cleanSids() {
-    sqlPool.getConnection((err, con) => {
-        if(err) return console.log(err);
-        let updateSidSql = `DELETE FROM \`session\` WHERE last < ${buildDbDate()}`;
-        con.query(updateSidSql, (err, result, fields) => { 
-            if(err) return console.log(err);
-        })
-    })
-    console.log("Sids cleaned")
-    setTimeout(cleanSids, 43200000)
 }
 
 function buildDbDate(a) {
