@@ -3,39 +3,51 @@
     <ltitle> Logare </ltitle>
     <form id="loginbox">
         <label>Numar Matricol</label><br />
-        <input type="text" id="email" name="email" for="email" required><br />
+        <input type="text" id="matricol" for="matricol" required><br />
         <label>Parola</label><br />
         <input type="password" id="password" name="password" for="email" required><br />
         <input type="submit" value="Intrati in cont">
     </form>
     <script>
+        currentTimeout = new Object;
         apiPort = 3999;
         $('#loginbox').submit((ev) => {
             ev.preventDefault();
             var $form = $(this)
-            url = document.domain + ':' + apiPort + '/login';
-            var posting = $.ajax({
-                url: url, 
-                type: 'POST',
-                data: {
-                    matricol: $('#name').val(),
+            url = 'https://' + document.domain + ':' + apiPort + '/login';
+            fetch(url, {
+                credentials: "same-origin/include",
+                method: 'POST',
+                cors: 'no-cors',
+                body: {
+                    matricol: $('#matricol').val(),
                     password: $('#password').val()
-                },
-                crossDomain: true,
-                statusCode: {
-                    500: () => {
-                        $('#err').css('display', 'block');
-                        $('#err').text('Eroare in server, incercati din nou mai tarziu');
-                        setTimeout(() => { $('#err').css('display', 'none'); }, 50000);
-                    },
-                    401: () => {
-                        $('#err').css('display', 'block');
-                        $('#err').text('Date incorecte');
-                        setTimeout(() => { $('#err').css('display', 'none'); }, 50000);
-                    },
-                    200: () => {
-                        window.location.replace(document.domain);
-                    }
+                }
+            }).then((res) => {
+                let errEl = document.getElementById('err');
+                switch(res.status) {
+                    case 500:
+                        clearTimeout(currentTimeout);
+                        errEl.innerText = 'Eroare de server, incercati mai tarziu';
+                        errEl.style.display = 'block';
+                        currentTimeout = setTimeout(() => { 
+                            let errEl = document.getElementById('err')
+                            errEl.style.display = 'none'; 
+                        }, 30000)
+                        break;
+                    case 401: 
+                        clearTimeout(currentTimeout);
+                        errEl.innerText = 'Date incorecte.'
+                        err.style.display = 'block'
+                        currentTimeout = setTimeout(() => {
+                            let errEl = document.getElementById('err');
+                            errEl.style.display = 'none';
+                        }, 30000);
+                        break;
+                    case 200:
+                        errEl.style.display = 'none';
+                        window.location.replace( document.domain + '/');
+                        break;
                 }
             })
         })
