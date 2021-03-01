@@ -39,17 +39,15 @@ app.get('/', async (req,res) => {
         ]
     }
     if(!req.signedCookies.sid) {
-        returned = true;
         return res.render('index', renderParams);
     }
     sqlPool.getConnection((err, con) => {
         if(err) { return res.render('index', renderParams);  }
         validateSidSql = `SELECT * FROM session WHERE sid='${req.signedCookies.sid}'`;
         con.query(validateSidSql, (err, result, fields) => {
-            if(err) { returned = true; return res.render('index', renderParams);  }
+            if(err) { return res.render('index', renderParams);  }
             if(!result.length) {
                 res.clearCookie('sid');
-                returned = true;
                 return res.render('index', renderParams);
             }
             renderParams = {
@@ -60,12 +58,10 @@ app.get('/', async (req,res) => {
             let date = new Date(result[0].last);
             return res.render('index', renderParams);
         })
-        if(returned) { return; }
     })
 })
 //login almost done
 app.post('/login', (req,res) => {
-    console.log(req.body.password);
     var returned = false;
     sqlPool.getConnection((err, con) => {
         if(err) return console.log(err);
@@ -91,7 +87,7 @@ app.post('/login', (req,res) => {
                 return res.redirect('/');
             }
             let cookie = '';
-            {
+            { //
                 let alpha = 'abcdefg';
                 for(let i = 0;i<16;i++) {
                     cookie += alpha[Math.floor(Math.random() * 7)];
@@ -104,7 +100,6 @@ app.post('/login', (req,res) => {
                 await res.cookie('sid', cookie, { signed: true });
                 return res.redirect('/');
             })
-            let makeSession
         })
         if(returned) {return;}
     })
