@@ -1,10 +1,43 @@
 <logbox>
+    <div id="err"></div>
     <ltitle> Logare </ltitle>
-    <form method="POST" action="/login">
+    <form id="loginbox">
         <label>Numar Matricol</label><br />
-        <input type="text" id="email" name="email" for="email"><br />
+        <input type="text" id="email" name="email" for="email" required><br />
         <label>Parola</label><br />
-        <input type="password" id="password" name="password" for="email"><br />
+        <input type="password" id="password" name="password" for="email" required><br />
         <input type="submit" value="Intrati in cont">
     </form>
+    <script>
+        apiPort = 3999;
+        $('#loginbox').submit((ev) => {
+            ev.preventDefault();
+            var $form = $(this)
+            url = document.domain + ':' + apiPort + '/login';
+            var posting = $.ajax({
+                url: url, 
+                type: 'POST',
+                data: {
+                    matricol: $('#name').val(),
+                    password: $('#password').val()
+                },
+                crossDomain: true,
+                statusCode: {
+                    500: () => {
+                        $('#err').css('display', 'block');
+                        $('#err').text('Eroare in server, incercati din nou mai tarziu');
+                        setTimeout(() => { $('#err').css('display', 'none'); }, 50000);
+                    },
+                    401: () => {
+                        $('#err').css('display', 'block');
+                        $('#err').text('Date incorecte');
+                        setTimeout(() => { $('#err').css('display', 'none'); }, 50000);
+                    },
+                    200: () => {
+                        window.location.replace(document.domain);
+                    }
+                }
+            })
+        })
+    </script>
 </logbox>
