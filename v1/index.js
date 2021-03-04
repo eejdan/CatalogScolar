@@ -62,47 +62,7 @@ app.get('/', async (req,res) => {
 })
 //login almost done
 app.post('/login', (req,res) => {
-    var returned = false;
-    sqlPool.getConnection((err, con) => {
-        if(err) return console.log(err);
-        var correctPass = false;
-        getUserSql = `SELECT * FROM \`user\` WHERE numar_matricol='${req.body.matricol}'`;
-        con.query(getUserSql,  (err, result, fields) => {
-            if(err) return console.log(err);
-            if(result.length > 0) {
-                if(result[0]) {
-                    let phash = shaenc(req.body.password);
-                    switch(phash) {
-                        case result[0].password:
-                            correctPass = true; break;
-                        case result[0].p1_password:
-                            correctPass = true; break;
-                        case result[0].p2_password:
-                            correctPass = true; break;
-                    }
-                }
-            } 
-            if(!correctPass) {
-                returned = true;
-                return res.redirect('/');
-            }
-            let cookie = '';
-            { //
-                let alpha = 'abcdefg';
-                for(let i = 0;i<16;i++) {
-                    cookie += alpha[Math.floor(Math.random() * 7)];
-                }
-                cookie = shaenc(cookie);
-            }
-            let makeSessionSql = `INSERT INTO \`session\` (\`numar_matricol\`, \`sid\`,\`clasa\`) VALUES ('${req.body.matricol}', '${cookie}', '${result[0].clasa}')`;
-            con.query(makeSessionSql, async (err, result, fields) => {
-                if(err) throw err;    
-                await res.cookie('sid', cookie, { signed: true });
-                return res.redirect('/');
-            })
-        })
-        if(returned) {return;}
-    })
+    console.log('request(a)');
 })
 //logout done
 app.post('/logout', (req,res) => {

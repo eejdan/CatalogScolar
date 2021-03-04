@@ -13,43 +13,13 @@
         apiPort = 3999;
         $('#loginbox').submit((ev) => {
             ev.preventDefault();
-            var $form = $(this)
-            url = 'https://' + document.domain + ':' + apiPort + '/login';
-            fetch(url, {
-                credentials: "same-origin/include",
-                method: 'POST',
-                cors: 'no-cors',
-                body: {
-                    matricol: $('#matricol').val(),
-                    password: $('#password').val()
-                }
-            }).then((res) => {
-                let errEl = document.getElementById('err');
-                switch(res.status) {
-                    case 500:
-                        clearTimeout(currentTimeout);
-                        errEl.innerText = 'Eroare de server, incercati mai tarziu';
-                        errEl.style.display = 'block';
-                        currentTimeout = setTimeout(() => { 
-                            let errEl = document.getElementById('err')
-                            errEl.style.display = 'none'; 
-                        }, 30000)
-                        break;
-                    case 401: 
-                        clearTimeout(currentTimeout);
-                        errEl.innerText = 'Date incorecte.'
-                        err.style.display = 'block'
-                        currentTimeout = setTimeout(() => {
-                            let errEl = document.getElementById('err');
-                            errEl.style.display = 'none';
-                        }, 30000);
-                        break;
-                    case 200:
-                        errEl.style.display = 'none';
-                        window.location.replace( document.domain + '/');
-                        break;
-                }
-            })
+            url = 'https://' + document.domain + ':' + apiPort + '/';
+            var request = new XMLHttpRequest();
+            request.open('POST', url, true)
+            request.onload = () => {
+                console.log(request.status);
+            }
+            request.send();
         })
     </script>
 </logbox>

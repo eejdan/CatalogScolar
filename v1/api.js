@@ -2,6 +2,7 @@
 console.log('Daniel Birleanu 2021 Copyright. All rights reserved.');
 require('dotenv').config();
 
+const cookieParser = require("cookie-parser");
 const bodyParser = require('body-parser');
 const express = require("express");
 const hash = require('hash.js');
@@ -16,13 +17,13 @@ var sqlPool = mysql.createPool({
     password: process.env.DBPASS,
     database: process.env.DBNAME
 })
-
+app.use(cookieParser(process.env.COOKIESECRET))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 // '/' api status
 app.get('/', (req,res) => {
-    res.send(100)
+    res.sendStatus(100)
 })
 app.post('/logout', (req, res) => {
     res.clearCookie('sid');
@@ -31,19 +32,19 @@ app.post('/logout', (req, res) => {
         if(err) return console.log(err);
         con.query(`DELETE FROM session WHERE sid='${req.signedCookies.sid}'`, (err, result, fields) => {
             if(err) return console.log(err);    
-            res.redirect('/');
+            res.sendStatus(200);
         })
     })
 })
 
 app.post('/login', (req, res) => {
-    
+    console.log('got request')
     sqlPool.getConnection((err, con) => {
-        if(err) { console.log(err); res.send(500); }
+        if(err) { console.log(err); res.sendStatus(500); }
         getUserSql = `SELECT * FROM \`user\` WHERE numar_matricol='${req.body.matricol}'`;
         var correctPass = false;
         con.query(getUserSql, (err, result, fields) => {
-            if(err) { console.log(err); return res.send(403); }
+            if(err) { console.log(err); return res.sendStatus(500); }
             if(result.length > 0 && result[0]) {
                     let phash = shaenc(req.body.password);
                     switch(phash) {
@@ -55,7 +56,7 @@ app.post('/login', (req, res) => {
                         correctPass = true; break;
                 }
             }
-            if(!correctPass) return res.send(401);
+            if(!correctPass) return res.sendStatus(401);
             let cookie = '';
             {
                 let alpha = 'abcdefg';
@@ -66,15 +67,15 @@ app.post('/login', (req, res) => {
             }
             let makeSessionSql = `INSERT INTO \`session\` (\`numar_matricol\`, \`sid\`,\`clasa\`) VALUES ('${req.body.matricol}', '${cookie}', '${result[0].clasa}')`;
             con.query(makeSessionSql, async (err, result, fields) => {
-                if(err) { console.log(err); res.send(500); }
+                if(err) { console.log(err); return res.sendStatus(500); }
                 res.cookie('sid', cookie, { signed: true });
-                return res.send(200);
+                return res.sendStatus(200);
             })
         })
     })
 })
 
-app.listen(process.env.APIPORT, () => { console.log("Server API pornit."); })
+app.listen(3999, () => { console.log("Server API pornit."); })
 //utilitati
 function shaenc(str) {
     return hash.sha256().update(str).digest('hex');

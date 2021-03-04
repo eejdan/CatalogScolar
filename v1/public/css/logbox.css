@@ -32,3 +32,8 @@ logbox input[type=submit] {
     background-color: #66BFFF;
     padding: 5px;
 }
+logbox > #err {
+    display: none;
+    color: white;
+    background-color: lightcoral; 
+}
