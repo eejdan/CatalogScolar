@@ -10,16 +10,36 @@
     </form>
     <script>
         currentTimeout = new Object;
-        apiPort = 3999;
         $('#loginbox').submit((ev) => {
             ev.preventDefault();
-            url = 'https://' + document.domain + ':' + apiPort + '/';
-            var request = new XMLHttpRequest();
-            request.open('POST', url, true)
-            request.onload = () => {
-                console.log(request.status);
+            $.ajax({
+            url: '/api/login',
+            type: 'post',
+            data: {
+                'password': $('#password').val(),
+                'matricol': $('#matricol').val()
+            },
+            success: () => {  },
+            statusCode: {
+                500: () => {
+                    $('#err').text('Eroare de Server');
+                    $('#err').css('display', 'block');
+                    currentTimeout = setTimeout(() => {
+                        $('#err').css('display', 'none')
+                    })
+                },
+                401: () => {
+                    $('#err').text('Date incorecte');
+                    $('#err').css('display', 'block');
+                    currentTimeout = setTimeout(() => {
+                        $('#err').css('display', 'none')
+                    })
+                },
+                200: () => {
+                    location.reload();
+                }
             }
-            request.send();
+            });
         })
     </script>
 </logbox>
