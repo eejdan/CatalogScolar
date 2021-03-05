@@ -8,6 +8,7 @@ const express = require("express");
 const hash = require('hash.js');
 var mysql = require('mysql');
 
+
 var app = express();
 var sqlPool = mysql.createPool({
     waitForConnections: true,
@@ -20,7 +21,7 @@ var sqlPool = mysql.createPool({
 app.use(cookieParser(process.env.COOKIESECRET))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-
+app.use((req,res,next)=> { console.log('got request '+ req.url); next();})
 // '/' api status
 app.get('/', (req,res) => {
     res.sendStatus(100)
@@ -38,7 +39,6 @@ app.post('/logout', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
-    console.log('got request')
     sqlPool.getConnection((err, con) => {
         if(err) { console.log(err); res.sendStatus(500); }
         getUserSql = `SELECT * FROM \`user\` WHERE numar_matricol='${req.body.matricol}'`;
@@ -47,6 +47,8 @@ app.post('/login', (req, res) => {
             if(err) { console.log(err); return res.sendStatus(500); }
             if(result.length > 0 && result[0]) {
                     let phash = shaenc(req.body.password);
+                    console.log(req.body.password);
+                    console.log(phash);
                     switch(phash) {
                     case result[0].password:
                         correctPass = true; break;
@@ -56,6 +58,7 @@ app.post('/login', (req, res) => {
                         correctPass = true; break;
                 }
             }
+            console.log(result);
             if(!correctPass) return res.sendStatus(401);
             let cookie = '';
             {

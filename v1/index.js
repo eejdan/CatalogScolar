@@ -9,9 +9,9 @@ const hash = require('hash.js');
 const cookieParser = require("cookie-parser");
 const bodyParser = require('body-parser');
 const { render } = require("ejs");
-
+const http = require('http');
 var mysql = require('mysql')
-
+var proxy = require('express-http-proxy');
 var app = express();
 var sqlPool = mysql.createPool({
     waitForConnections: true,
@@ -27,9 +27,18 @@ app.set('views', __dirname + '/views')
 
 app.use(express.static('public'))
 app.use(cookieParser(process.env.COOKIESECRET))
-
+{
+    let proxyIp = 'localhost:' + process.env.APIPORT;
+    app.use('/api', proxy(proxyIp));
+}
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+
+const apiForwardOptions = {
+    host: 'localhost',
+    port: process.env.APIPORT,
+}
 
 app.get('/', async (req,res) => {
     var returned = false;
@@ -62,7 +71,37 @@ app.get('/', async (req,res) => {
 })
 //login almost done
 app.post('/login', (req,res) => {
-    console.log('request(a)');
+    console.log(req.body);
+    var currentForward = {
+        ...apiForwardOptions,
+        path: '/login',
+        method: 'POST',
+        headers: req.headers
+    }
+    let forwardReq = http.request(
+        currentForward, pres => {
+            pres.setEncoding('utf8');
+            res.writeHead(pres.statusCode);
+            pres.on('data', chunk => {
+              res.write(chunk);
+            });
+            pres.on('close', () => {
+              res.end();
+            });
+            pres.on('end', () => {
+              res.end();
+            });
+            
+        }
+    ).on('error', e => {
+        console.log(e.message);
+        try {
+          res.writeHead(500);
+          res.write(e.message);
+        } catch (e) { console.log(e); }
+        res.end();
+    });
+    forwardReq.end();
 })
 //logout done
 app.post('/logout', (req,res) => {
