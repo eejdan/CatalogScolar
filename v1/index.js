@@ -69,52 +69,7 @@ app.get('/', async (req,res) => {
         })
     })
 })
-//login almost done
-app.post('/login', (req,res) => {
-    console.log(req.body);
-    var currentForward = {
-        ...apiForwardOptions,
-        path: '/login',
-        method: 'POST',
-        headers: req.headers
-    }
-    let forwardReq = http.request(
-        currentForward, pres => {
-            pres.setEncoding('utf8');
-            res.writeHead(pres.statusCode);
-            pres.on('data', chunk => {
-              res.write(chunk);
-            });
-            pres.on('close', () => {
-              res.end();
-            });
-            pres.on('end', () => {
-              res.end();
-            });
-            
-        }
-    ).on('error', e => {
-        console.log(e.message);
-        try {
-          res.writeHead(500);
-          res.write(e.message);
-        } catch (e) { console.log(e); }
-        res.end();
-    });
-    forwardReq.end();
-})
-//logout done
-app.post('/logout', (req,res) => {
-    res.clearCookie('sid');
-    console.log('user logout '+ req.signedCookies.sid); 
-    sqlPool.getConnection((err, con) => {
-        if(err) return console.log(err);
-        con.query(`DELETE FROM session WHERE sid='${req.signedCookies.sid}'`, (err, result, fields) => {
-            if(err) return console.log(err);    
-            res.redirect('/');
-        })
-    })
-})
+
 //FIX THIS
 app.post('/elev/', (req,res) => { //neterminat //de aici se preiau in forma JSON informatiile despre elev, note, absente
     if(!req.signedCookies.sid) {

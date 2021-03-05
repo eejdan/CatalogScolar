@@ -21,7 +21,6 @@ var sqlPool = mysql.createPool({
 app.use(cookieParser(process.env.COOKIESECRET))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-app.use((req,res,next)=> { console.log('got request '+ req.url); next();})
 // '/' api status
 app.get('/', (req,res) => {
     res.sendStatus(100)
@@ -47,8 +46,6 @@ app.post('/login', (req, res) => {
             if(err) { console.log(err); return res.sendStatus(500); }
             if(result.length > 0 && result[0]) {
                     let phash = shaenc(req.body.password);
-                    console.log(req.body.password);
-                    console.log(phash);
                     switch(phash) {
                     case result[0].password:
                         correctPass = true; break;
@@ -58,7 +55,6 @@ app.post('/login', (req, res) => {
                         correctPass = true; break;
                 }
             }
-            console.log(result);
             if(!correctPass) return res.sendStatus(401);
             let cookie = '';
             {
@@ -92,7 +88,6 @@ function buildDbDate(a) {
     let strDate = `${basicDate.getFullYear()}-${mth}-${basicDate.getDate()}`;
     return strDate;
 }
-//
 async function init() {
     setTimeout(cleanSids, 50000)
 }
@@ -112,7 +107,7 @@ async function cleanSids() {
         con.query(updateSidSql, (err, result, fields) => { 
             if(err) return console.log(err);
         })
-    })
+    })``
     console.log("Sids cleaned")
     setTimeout(cleanSids, 43200000)
 }
