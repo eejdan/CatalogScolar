@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gazdă: 127.0.0.1
--- Timp de generare: feb. 18, 2021 la 01:42 PM
+-- Timp de generare: mart. 09, 2021 la 07:37 AM
 -- Versiune server: 10.4.17-MariaDB
 -- Versiune PHP: 8.0.0
 
@@ -66,7 +66,10 @@ CREATE TABLE `elev` (
   `p2_prenume` tinytext NOT NULL,
   `p2_telefon` tinytext NOT NULL,
   `p2_email` tinytext NOT NULL,
-  `mentiuni` text NOT NULL
+  `mentiuni` text NOT NULL,
+  `password` tinytext NOT NULL,
+  `p1_password` tinytext NOT NULL,
+  `p2_password` tinytext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -105,20 +108,6 @@ CREATE TABLE `status` (
   `numar_matricol` int(11) NOT NULL,
   `status` int(11) NOT NULL,
   `data` date NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Structură tabel pentru tabel `user`
---
-
-CREATE TABLE `user` (
-  `numar_matricol` int(11) NOT NULL,
-  `clasa` tinytext NOT NULL,
-  `password` tinytext NOT NULL,
-  `p1_password` tinytext NOT NULL,
-  `p2_password` tinytext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 COMMIT;
 

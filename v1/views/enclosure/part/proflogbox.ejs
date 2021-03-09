@@ -1,0 +1,41 @@
+<logbox>
+<form id="loginbox">
+    <label>Numar Matricol</label><br />
+    <input type="text" id="matricol" for="matricol" required><br />
+    <label>Parola</label><br />
+    <input type="password" id="password" name="password" for="email" required><br />
+    <input type="submit" value="Intrati in cont">
+</form>
+<script>
+    currentTimeout = new Object;
+    $('#loginbox').submit((ev) => {
+        ev.preventDefault();
+        $.ajax({
+        url: '/api/loginprof',
+        type: 'post',
+        data: {
+            'password': $('#password').val(),
+            'matricol': $('#matricol').val()
+        },
+        success: () => {  },
+        statusCode: {
+            500: () => {
+                $('#err').text('Eroare de Server');
+                $('#err').css('display', 'block');
+                currentTimeout = setTimeout(() => {
+                    $('#err').css('display', 'none')
+                })
+            },
+            401: () => {
+                $('#err').text('Date incorecte');
+                $('#err').css('display', 'block');
+                currentTimeout = setTimeout(() => {
+                    $('#err').css('display', 'none')
+                })
+            },
+            200: () => { location.reload();}
+        }
+        });
+    });
+</script>
+</logbox>
